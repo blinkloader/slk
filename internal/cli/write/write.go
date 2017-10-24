@@ -31,7 +31,6 @@ func initCommand() cli.Command {
 	f.Parse(os.Args[2:])
 
 	var conf config.Config
-	log.SetPrefix("write: ")
 	if _, err := toml.DecodeFile(env.MustGet("HOME")+"/.slk", &conf); err != nil {
 		log.Fatalf("error reading $HOME/.slk config file: %s", err.Error())
 	}

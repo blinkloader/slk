@@ -22,8 +22,6 @@ type command struct {
 func initCommand() cli.Command {
 	var conf config.Config
 
-	log.SetPrefix("read: ")
-
 	if _, err := toml.DecodeFile(env.MustGet("HOME")+"/.slk", &conf); err != nil {
 		log.Fatalf("error reading $HOME/.slk config file: %s", err.Error())
 	}

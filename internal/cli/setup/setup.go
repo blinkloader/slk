@@ -10,13 +10,15 @@ import (
 
 	"github.com/BurntSushi/toml"
 	env "github.com/segmentio/go-env"
+	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/cli"
 	"github.com/yarikbratashchuk/slk/internal/config"
 )
 
 type command struct {
-	flag         *flag.FlagSet
-	tflag, cflag *string
+	flag *flag.FlagSet
+
+	tflag, cflag, uflag *string
 }
 
 func parseCommand() cli.Command {
@@ -28,21 +30,24 @@ func parseCommand() cli.Command {
 
 	tflag := f.String("t", "", "slack API token")
 	cflag := f.String("c", "", "channel, private group, or IM channel to send message to")
+	uflag := f.String("u", "", "your username in that channel")
 
 	f.Parse(os.Args[2:])
 
-	return &command{f, tflag, cflag}
+	return &command{f, tflag, cflag, uflag}
 }
 
 func (c *command) Run() {
-	if c.flag.NFlag() < 2 {
+	if c.flag.NFlag() < 3 {
 		c.Usage()
 	}
 
-	// TODO: get users here
-	conf := config.Config{*c.cflag, *c.tflag, nil}
-
-	log.SetPrefix("setup: ")
+	conf := config.Config{*c.cflag, *c.tflag, *c.uflag, nil}
+	users, err := api.GetChatUsers(conf)
+	if err != nil {
+		log.Fatalf("error getting chat users: %s", err.Error())
+	}
+	conf.Users = users
 
 	buf := new(bytes.Buffer)
 	if err := toml.NewEncoder(buf).Encode(conf); err != nil {
@@ -55,10 +60,11 @@ func (c *command) Run() {
 }
 
 func (c *command) Usage() {
-	fmt.Printf(`Usage: %s setup -t=<TOKEN> -c=<channel>
+	fmt.Printf(`Usage: %s setup -t=<slack-token> -c=<channel-id> -u=<channel-username>
 	
-<TOKEN>   - slack API token
-<channel> - channel, private group, or IM channel to send message to
+<slack-token>      - slack API token
+<channel-id>       - IM channel id to send message to
+<channel-username> - your username in that chat
 `, os.Args[0])
 	os.Exit(2)
 }
