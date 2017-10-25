@@ -4,19 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net/http"
-	"net/url"
 	"os"
 
-	"github.com/BurntSushi/toml"
-	env "github.com/segmentio/go-env"
+	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/cli"
 	"github.com/yarikbratashchuk/slk/internal/config"
 )
 
 type command struct {
-	channel, token string
-	users          map[string]config.User
+	conf config.Config
 
 	message string
 }
@@ -30,24 +26,11 @@ func initCommand() cli.Command {
 	mflag := f.String("m", "", "text message")
 	f.Parse(os.Args[2:])
 
-	var conf config.Config
-	if _, err := toml.DecodeFile(env.MustGet("HOME")+"/.slk", &conf); err != nil {
-		log.Fatalf("error reading $HOME/.slk config file: %s", err.Error())
-	}
-
-	return &command{conf.Channel, conf.Token, conf.Users, *mflag}
+	return &command{config.Read(), *mflag}
 }
 
 func (c *command) Run() {
-	data := url.Values{}
-	data.Set("token", c.token)
-	data.Set("channel", c.channel)
-	data.Set("text", c.message)
-	data.Set("as_user", "1")
-	data.Set("username", "yarik")
-
-	_, err := http.PostForm("https://slack.com/api/chat.postMessage", data)
-	if err != nil {
+	if err := api.SendMessage(c.conf, c.message); err != nil {
 		log.Fatalf("error sending message: %s", err.Error())
 	}
 }

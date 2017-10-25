@@ -6,6 +6,7 @@ import (
 
 	"github.com/yarikbratashchuk/slk/internal/cli"
 
+	_ "github.com/yarikbratashchuk/slk/internal/cli/listen"
 	_ "github.com/yarikbratashchuk/slk/internal/cli/read"
 	_ "github.com/yarikbratashchuk/slk/internal/cli/setup"
 	_ "github.com/yarikbratashchuk/slk/internal/cli/write"

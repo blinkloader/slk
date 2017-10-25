@@ -1,31 +1,23 @@
 package setup
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 
-	"github.com/BurntSushi/toml"
-	env "github.com/segmentio/go-env"
 	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/cli"
 	"github.com/yarikbratashchuk/slk/internal/config"
 )
 
 type command struct {
-	flag *flag.FlagSet
+	conf config.Config
 
-	tflag, cflag, uflag *string
+	flag *flag.FlagSet
 }
 
 func parseCommand() cli.Command {
-	if len(os.Args) < 2 {
-		return &command{}
-	}
-
 	f := flag.NewFlagSet("setup", flag.ExitOnError)
 
 	tflag := f.String("t", "", "slack API token")
@@ -34,7 +26,7 @@ func parseCommand() cli.Command {
 
 	f.Parse(os.Args[2:])
 
-	return &command{f, tflag, cflag, uflag}
+	return &command{config.Config{*cflag, *tflag, *uflag, nil}, f}
 }
 
 func (c *command) Run() {
@@ -42,20 +34,14 @@ func (c *command) Run() {
 		c.Usage()
 	}
 
-	conf := config.Config{*c.cflag, *c.tflag, *c.uflag, nil}
-	users, err := api.GetChatUsers(conf)
+	users, err := api.GetChatUsers(c.conf)
 	if err != nil {
 		log.Fatalf("error getting chat users: %s", err.Error())
 	}
-	conf.Users = users
+	c.conf.Users = users
 
-	buf := new(bytes.Buffer)
-	if err := toml.NewEncoder(buf).Encode(conf); err != nil {
-		log.Fatalf("error writing $HOME/.slk config file: %s", err.Error())
-	}
-
-	if err := ioutil.WriteFile(env.MustGet("HOME")+"/.slk", buf.Bytes(), 0755); err != nil {
-		log.Fatalf("error writing $HOME/.slk config file: %s", err.Error())
+	if err := config.Write(c.conf); err != nil {
+		log.Fatalf("error saving config: %s", err.Error())
 	}
 }
 
