@@ -3,6 +3,7 @@ package history
 import (
 	"bytes"
 	"io/ioutil"
+	"os"
 
 	"github.com/BurntSushi/toml"
 	env "github.com/segmentio/go-env"
@@ -52,4 +53,11 @@ newloop:
 		diff = append(diff, m)
 	}
 	return diff
+}
+
+func Clear() error {
+	if err := os.Remove(historyFile); err != nil {
+		return err
+	}
+	return nil
 }

@@ -25,8 +25,8 @@ func initCommand() cli.Command {
 }
 
 func (c *command) Run() {
+	stopDaemon()
 	if c.tflag {
-		stopDaemon()
 		return
 	}
 	startDaemon()
@@ -45,24 +45,12 @@ func startDaemon() {
 		log.Fatalf("can't start chat listening process: %s", err.Error())
 	}
 
-	if err := config.WriteDaemonPID(cmd.Process.Pid); err != nil {
-		log.Println("can't write slkd pid to $HOME/.slkd: %s", err.Error())
-	}
 	cmd.Process.Release()
 }
 
 func stopDaemon() {
-	var pid int
-	var err error
-	if pid, err = config.ReadDaemonPID(); err != nil {
-		log.Fatalf("can't read slkd pid from $HOME/.slkd: %s", err.Error())
-	}
-	proc, err := os.FindProcess(pid)
-	if err != nil {
-		log.Fatalf("can't find process slkd by pid=%d: %s", pid, err.Error())
-	}
-	proc.Kill()
-	config.RemoveDaemonPID()
+	cmd := exec.Command("killall", "slkd")
+	_ = cmd.Run()
 }
 
 func (c *command) Usage() {

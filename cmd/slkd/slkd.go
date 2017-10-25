@@ -20,14 +20,16 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
 	go func() {
 		<-sigs
-		if err := config.RemoveDaemonPID(); err != nil {
-			log.Println(err)
-		}
-
-		os.Exit(1)
+		os.Exit(0)
 	}()
 
 	for {
+		newConf := config.Read()
+		if newConf.Channel != conf.Channel {
+			history.Clear()
+			conf = newConf
+		}
+
 		fetched, err := api.GetChatHistory(conf)
 		if err != nil {
 			log.Println(err)

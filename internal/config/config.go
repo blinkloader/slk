@@ -2,11 +2,8 @@ package config
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
-	"strconv"
 
 	"github.com/BurntSushi/toml"
 	env "github.com/segmentio/go-env"
@@ -44,32 +41,6 @@ func Write(conf Config) error {
 	}
 
 	if err := ioutil.WriteFile(configFile, buf.Bytes(), 0755); err != nil {
-		return err
-	}
-	return nil
-}
-
-func ReadDaemonPID() (int, error) {
-	data, err := ioutil.ReadFile(daemonPIDFile)
-	if err != nil {
-		return 0, err
-	}
-	pid, err := strconv.Atoi(string(data))
-	if err != nil {
-		return 0, err
-	}
-	return pid, nil
-}
-
-func WriteDaemonPID(pid int) error {
-	if err := ioutil.WriteFile(daemonPIDFile, []byte(fmt.Sprintf("%d", pid)), 0755); err != nil {
-		return err
-	}
-	return nil
-}
-
-func RemoveDaemonPID() error {
-	if err := os.Remove(daemonPIDFile); err != nil {
 		return err
 	}
 	return nil

@@ -9,6 +9,7 @@ import (
 	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/cli"
 	"github.com/yarikbratashchuk/slk/internal/config"
+	"github.com/yarikbratashchuk/slk/internal/history"
 )
 
 type command struct {
@@ -43,6 +44,8 @@ func (c *command) Run() {
 	if err := config.Write(c.conf); err != nil {
 		log.Fatalf("error saving config: %s", err.Error())
 	}
+
+	history.Clear()
 }
 
 func (c *command) Usage() {

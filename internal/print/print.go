@@ -37,7 +37,6 @@ func ListenChat(username string, users map[string]config.User, messages []*api.M
 
 	buf.WriteString("\n\n")
 	buf.WriteString(color.New(color.FgGreen, color.Bold).Sprintf("  Slack:\n"))
-	buf.WriteString("\n")
 	for _, m := range messages {
 		isme := users[m.User].Name == username
 		if isme {
@@ -55,10 +54,14 @@ func ListenChat(username string, users map[string]config.User, messages []*api.M
 }
 
 func Message(uv int, user, text string, me bool) string {
-	u := strings.Repeat(" ", uv-len(user)) + user
+	space := strings.Repeat(" ", uv-len(user))
+	u := space + user
 	if me {
 		u = color.CyanString(u)
 	}
+
+	text = strings.Replace(text, "\n", "\n    "+strings.Repeat(" ", uv), -1)
+
 	return fmt.Sprintf("%s: %s\n", u, text)
 }
 
