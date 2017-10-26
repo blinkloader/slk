@@ -1,7 +1,6 @@
 package write
 
 import (
-	"flag"
 	"fmt"
 	"os"
 
@@ -18,20 +17,16 @@ type command struct {
 }
 
 func initCommand() cli.Command {
-	if len(os.Args) < 2 {
-		return &command{}
+	if len(os.Args) != 3 {
+		usage()
 	}
-
-	f := flag.NewFlagSet("write", flag.ExitOnError)
-	mflag := f.String("m", "", "text message")
-	f.Parse(os.Args[2:])
 
 	conf, err := config.Read()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return &command{conf, *mflag}
+	return &command{conf, os.Args[2]}
 }
 
 func (c *command) Run() {
@@ -41,11 +36,11 @@ func (c *command) Run() {
 }
 
 func (c *command) Usage() {
-	fmt.Printf(`Usage: %s write <options>
-	
-Options:
-  -m  -  message
-`, os.Args[0])
+	usage()
+}
+
+func usage() {
+	fmt.Printf("Usage: %s write <message>", os.Args[0])
 	os.Exit(0)
 }
 

@@ -8,7 +8,7 @@
 
 ### Demo
 
-![demo](https://user-images.githubusercontent.com/12980380/32066777-96ccc284-ba89-11e7-8823-78fea6d48eb1.png)
+![demo](https://user-images.githubusercontent.com/12980380/32070344-b4a3ba00-ba94-11e7-88d3-1c6c48d2c4dc.png)
 
 ### Quick start
 
@@ -30,24 +30,20 @@ $ slk setup -t=<slack-token> -c=<channel> -u=<username>
 Wait for messages:
 
 ```
-$ slk listen
+$ slk listen   #start listening for new messages
+$ slk ignore   #stop listening for new messages
 ```
 
-Write message:
+Read/Write message:
 
 ```
-$ slk write -m "how are you?"
+$ slk read     #returns last 10 messages
+$ slk write 'hi bot!'         
 ```
 
 Switch to channel or private chat
 
 ```
-$ slk to general // for public channel or private group
-$ slk to @max // for direct messages
-```
-
-Read last 10 messages:    
-
-```
-$ slk read
+$ slk to general   #for public channel or private group
+$ slk to @max      #for direct messages
 ```

@@ -6,11 +6,15 @@ import (
 
 	"github.com/yarikbratashchuk/slk/internal/cli"
 
-	_ "github.com/yarikbratashchuk/slk/internal/cli/listen"
-	_ "github.com/yarikbratashchuk/slk/internal/cli/read"
 	_ "github.com/yarikbratashchuk/slk/internal/cli/setup"
-	_ "github.com/yarikbratashchuk/slk/internal/cli/to"
+
+	_ "github.com/yarikbratashchuk/slk/internal/cli/ignore"
+	_ "github.com/yarikbratashchuk/slk/internal/cli/listen"
+
+	_ "github.com/yarikbratashchuk/slk/internal/cli/read"
 	_ "github.com/yarikbratashchuk/slk/internal/cli/write"
+
+	_ "github.com/yarikbratashchuk/slk/internal/cli/to"
 )
 
 func main() {
@@ -45,9 +49,13 @@ messaging cli.
 
 Commands:
   setup  - set up and change slk configuration
-  listen - start listen chat for messages
+
+  listen - start listen channel for messages
+  ignore - stop listening channel for messages
+
   read   - get last 10 messages
   write  - write message
+
   to     - used to switch between channels
   
 Options:

@@ -1,39 +1,26 @@
 package listen
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"os/exec"
 
 	"github.com/yarikbratashchuk/slk/internal/cli"
-	"github.com/yarikbratashchuk/slk/internal/config"
 	"github.com/yarikbratashchuk/slk/internal/log"
 )
 
-type command struct {
-	conf config.Config
-
-	tflag bool
-}
+type command struct{}
 
 func initCommand() cli.Command {
-	f := flag.NewFlagSet("listen", flag.ExitOnError)
-	tflag := f.Bool("t", false, "terminates chat listening")
-	f.Parse(os.Args[2:])
-
-	conf, err := config.Read()
-	if err != nil {
-		log.Fatal(err)
+	if len(os.Args) != 2 {
+		usage()
 	}
-	return &command{conf, *tflag}
+
+	return &command{}
 }
 
-func (c *command) Run() {
+func (c command) Run() {
 	stopDaemon()
-	if c.tflag {
-		return
-	}
 	startDaemon()
 }
 
@@ -58,12 +45,12 @@ func stopDaemon() {
 	_ = cmd.Run()
 }
 
-func (c *command) Usage() {
-	fmt.Printf(`Usage: %s listen <options>
+func (c command) Usage() {
+	usage()
+}
 
-Options:
-  -t  -  used to terminate chat listening process
-`, os.Args[0])
+func usage() {
+	fmt.Printf("Usage: %s listen\n", os.Args[0])
 	os.Exit(0)
 }
 
