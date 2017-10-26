@@ -16,7 +16,7 @@ type userList struct {
 	} `json:"members"`
 }
 
-func GetChatUsers(conf config.Config) (users map[string]config.User, err error) {
+func GetChanUsers(conf config.Config) (users map[string]config.User, err error) {
 	data := url.Values{}
 	data.Set("token", conf.Token)
 	data.Set("channel", conf.Channel)

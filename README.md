@@ -8,7 +8,7 @@
 
 ### Demo
 
-![demo](https://user-images.githubusercontent.com/12980380/31976469-6d593b0c-b940-11e7-90ef-7a0c3fbcd392.png)
+![demo](https://user-images.githubusercontent.com/12980380/32066777-96ccc284-ba89-11e7-8823-78fea6d48eb1.png)
 
 ### Quick start
 
@@ -37,6 +37,13 @@ Write message:
 
 ```
 $ slk write -m "how are you?"
+```
+
+Switch to channel or private chat
+
+```
+$ slk to general // for public channel or private group
+$ slk to @max // for direct messages
 ```
 
 Read last 10 messages:    

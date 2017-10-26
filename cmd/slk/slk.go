@@ -9,6 +9,7 @@ import (
 	_ "github.com/yarikbratashchuk/slk/internal/cli/listen"
 	_ "github.com/yarikbratashchuk/slk/internal/cli/read"
 	_ "github.com/yarikbratashchuk/slk/internal/cli/setup"
+	_ "github.com/yarikbratashchuk/slk/internal/cli/to"
 	_ "github.com/yarikbratashchuk/slk/internal/cli/write"
 )
 
@@ -47,6 +48,7 @@ Commands:
   listen - start listen chat for messages
   read   - get last 10 messages
   write  - write message
+  to     - used to switch between channels
   
 Options:
   command specific, use "slk help <command>" for details

@@ -48,9 +48,9 @@ func (c *command) Run() {
 
 	c.conf.Channel = channelID
 
-	users, err := api.GetChatUsers(c.conf)
+	users, err := api.GetChanUsers(c.conf)
 	if err != nil {
-		log.Fatalf("error getting chat users: %s", err)
+		log.Fatalf("error getting channel users: %s", err)
 	}
 	c.conf.Users = users
 
