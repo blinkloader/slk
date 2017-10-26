@@ -2,14 +2,22 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/url"
 
 	"github.com/yarikbratashchuk/slk/internal/config"
+	"github.com/yarikbratashchuk/slk/internal/errors"
 )
 
-type chatHistory struct {
+var (
+	errGetHistory  = errors.New("error getting channel history")
+	errPostMessage = errors.New("error posting message")
+
+	errGetChannelID  = errors.New("error getting channel-id")
+	errNoSuchChannel = errors.New("no such channel")
+)
+
+type history struct {
 	Ok       bool       `json:"ok"`
 	Messages []*Message `json:"messages"`
 }
@@ -21,7 +29,7 @@ type Message struct {
 	Ts   string `json:"ts"`
 }
 
-func GetChatHistory(conf config.Config) (hist []*Message, err error) {
+func GetChannelHistory(conf config.Config) ([]*Message, error) {
 	data := url.Values{}
 	data.Set("token", conf.Token)
 	data.Set("channel", conf.Channel)
@@ -29,18 +37,17 @@ func GetChatHistory(conf config.Config) (hist []*Message, err error) {
 
 	res, err := http.PostForm("https://slack.com/api/conversations.history", data)
 	if err != nil {
-		return
+		return []*Message{}, errors.Wrap(errGetHistory, err)
 	}
 
-	var h chatHistory
+	var h history
 	if err = json.NewDecoder(res.Body).Decode(&h); err != nil {
-		return
+		return []*Message{}, errors.Wrap(errGetHistory, err)
 	}
 	defer res.Body.Close()
 
 	if !h.Ok {
-		err = errors.New("error reading slack history")
-		return
+		return []*Message{}, errGetHistory
 	}
 
 	return h.Messages, nil
@@ -56,7 +63,7 @@ func SendMessage(c config.Config, message string) error {
 
 	_, err := http.PostForm("https://slack.com/api/chat.postMessage", data)
 	if err != nil {
-		return err
+		return errors.Wrap(errPostMessage, err)
 	}
 	return nil
 }

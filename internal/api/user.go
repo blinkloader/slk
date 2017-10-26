@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/yarikbratashchuk/slk/internal/config"
+	"github.com/yarikbratashchuk/slk/internal/errors"
 )
 
 type userList struct {
@@ -24,6 +25,7 @@ func GetChatUsers(conf config.Config) (users map[string]config.User, err error) 
 	if err != nil {
 		return
 	}
+
 	var resParsed struct {
 		Members []string `json:"members"`
 	}
@@ -32,14 +34,8 @@ func GetChatUsers(conf config.Config) (users map[string]config.User, err error) 
 	}
 	defer res.Body.Close()
 
-	res, err = http.PostForm("https://slack.com/api/users.list", data)
+	userlist, err := getUserList(conf.Token)
 	if err != nil {
-		return
-	}
-	defer res.Body.Close()
-
-	var userlist userList
-	if err = json.NewDecoder(res.Body).Decode(&userlist); err != nil {
 		return
 	}
 
@@ -52,5 +48,36 @@ func GetChatUsers(conf config.Config) (users map[string]config.User, err error) 
 		}
 	}
 
+	return
+}
+
+var errNoSuchUser = errors.New("can't find user with such name")
+
+func GetUserID(token, name string) (string, error) {
+	ulist, err := getUserList(token)
+	if err != nil {
+		return "", err
+	}
+
+	for _, u := range ulist.Members {
+		if u.Name == name {
+			return u.ID, nil
+		}
+	}
+	return "", errNoSuchUser
+}
+
+func getUserList(token string) (list userList, err error) {
+	data := url.Values{}
+	data.Set("token", token)
+	res, err := http.PostForm("https://slack.com/api/users.list", data)
+	if err != nil {
+		return
+	}
+	defer res.Body.Close()
+
+	if err = json.NewDecoder(res.Body).Decode(&list); err != nil {
+		return
+	}
 	return
 }

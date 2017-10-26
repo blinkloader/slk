@@ -3,13 +3,13 @@ package setup
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/cli"
 	"github.com/yarikbratashchuk/slk/internal/config"
 	"github.com/yarikbratashchuk/slk/internal/history"
+	"github.com/yarikbratashchuk/slk/internal/log"
 )
 
 type command struct {
@@ -19,43 +19,61 @@ type command struct {
 }
 
 func parseCommand() cli.Command {
+	if len(os.Args[2:]) == 0 {
+		os.Exit(0)
+	}
+
+	conf, _ := config.Read()
+
 	f := flag.NewFlagSet("setup", flag.ExitOnError)
 
-	tflag := f.String("t", "", "slack API token")
-	cflag := f.String("c", "", "channel, private group, or IM channel to send message to")
-	uflag := f.String("u", "", "your username in that channel")
+	tflag := f.String("t", conf.Token, "slack API token")
+	cflag := f.String("c", conf.Channel, "channel, private group, or IM channel to send message to")
+	uflag := f.String("u", conf.Username, "your username")
 
 	f.Parse(os.Args[2:])
 
-	return &command{config.Config{*cflag, *tflag, *uflag, nil}, f}
+	if len(f.Args()) != 0 {
+		usage()
+	}
+
+	return &command{config.Config{"", *cflag, *tflag, *uflag, nil}, f}
 }
 
 func (c *command) Run() {
-	if c.flag.NFlag() < 3 {
-		c.Usage()
+	channelID, err := api.GetChannelID(c.conf.Token, c.conf.ChannelName)
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	c.conf.Channel = channelID
 
 	users, err := api.GetChatUsers(c.conf)
 	if err != nil {
-		log.Fatalf("error getting chat users: %s", err.Error())
+		log.Fatalf("error getting chat users: %s", err)
 	}
 	c.conf.Users = users
 
 	if err := config.Write(c.conf); err != nil {
-		log.Fatalf("error saving config: %s", err.Error())
+		log.Fatalf("error saving config: %s", err)
 	}
 
 	history.Clear()
 }
 
 func (c *command) Usage() {
-	fmt.Printf(`Usage: %s setup -t=<slack-token> -c=<channel-id> -u=<channel-username>
-	
-<slack-token>      - slack API token
-<channel-id>       - IM channel id to send message to
-<channel-username> - your username in that chat
+	usage()
+}
+
+func usage() {
+	fmt.Printf(`Usage: %s setup <options>
+
+Options:
+  -t  -  slack API token
+  -c  -  channel, private group, or IM channel to send message to
+  -u  -  your username
 `, os.Args[0])
-	os.Exit(2)
+	os.Exit(0)
 }
 
 func init() {

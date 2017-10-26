@@ -8,9 +8,16 @@ import (
 	"github.com/BurntSushi/toml"
 	env "github.com/segmentio/go-env"
 	"github.com/yarikbratashchuk/slk/internal/api"
+	"github.com/yarikbratashchuk/slk/internal/errors"
 )
 
-var historyFile = env.MustGet("HOME") + "/.slk_history"
+var (
+	historyFile = env.MustGet("HOME") + "/.slk_history"
+
+	errReadingHistory  = errors.New("error reading $HOME/.slk_history")
+	errWritingHistory  = errors.New("error writing $HOME/.slk_history")
+	errRemovingHistory = errors.New("error removing $HOME/.slk_history")
+)
 
 type History struct {
 	Messages []*api.Message `toml:"messages"`
@@ -19,7 +26,7 @@ type History struct {
 func Read() ([]*api.Message, error) {
 	var hist History
 	if _, err := toml.DecodeFile(historyFile, &hist); err != nil {
-		return nil, err
+		return nil, errors.Wrap(errReadingHistory, err)
 	}
 	return hist.Messages, nil
 }
@@ -33,11 +40,11 @@ func Update(old, dif []*api.Message) error {
 
 	buf := new(bytes.Buffer)
 	if err := toml.NewEncoder(buf).Encode(History{dif}); err != nil {
-		return err
+		return errors.Wrap(errWritingHistory, err)
 	}
 
 	if err := ioutil.WriteFile(historyFile, buf.Bytes(), 0755); err != nil {
-		return err
+		return errors.Wrap(errWritingHistory, err)
 	}
 	return nil
 }
@@ -57,7 +64,7 @@ newloop:
 
 func Clear() error {
 	if err := os.Remove(historyFile); err != nil {
-		return err
+		return errors.Wrap(errRemovingHistory, err)
 	}
 	return nil
 }
