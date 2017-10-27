@@ -37,7 +37,11 @@ func chat(username string, users map[string]string, messages []*api.Message, fro
 	buf.WriteString("\n")
 	if fromDaemon {
 		buf.WriteString("\n")
-		buf.WriteString(color.New(color.FgGreen, color.Bold).Sprintf("  " + strings.Repeat(" ", uw-5) + "Slack:\n"))
+		slkSpace := 0
+		if s := uw - 5; s > 0 {
+			slkSpace = s
+		}
+		buf.WriteString(color.New(color.FgGreen, color.Bold).Sprintf("  " + strings.Repeat(" ", slkSpace) + "Slack:\n"))
 	}
 	messagesBuf, my := Messages(uw, username, users, messages)
 	if fromDaemon && len(messages) == my {

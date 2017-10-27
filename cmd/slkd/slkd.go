@@ -36,7 +36,9 @@ func main() {
 		}
 
 		diff := message.TsFilterNewer(conf.ChannelTs[conf.Channel], hist)
+
 		message.RemoveURefs(diff)
+		message.FormatLines(hist)
 
 		print.ListenChat(conf.Username, conf.Users, diff)
 

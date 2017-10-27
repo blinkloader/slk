@@ -32,6 +32,7 @@ func (c *command) Run() {
 	}
 
 	message.RemoveURefs(hist)
+	message.FormatLines(hist)
 
 	print.Chat(c.conf.Username, c.conf.Users, hist)
 

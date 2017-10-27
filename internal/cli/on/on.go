@@ -45,4 +45,6 @@ Returns name of the current channel
 
 func init() {
 	cli.RegisterCommand("on", initCommand)
+	cli.RegisterCommand("at", initCommand)
+	cli.RegisterCommand("in", initCommand)
 }

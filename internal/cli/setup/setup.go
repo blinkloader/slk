@@ -38,6 +38,10 @@ func parseCommand() cli.Command {
 		usage()
 	}
 
+	if *tflag == "" || *cflag == "" || *uflag == "" {
+		usage()
+	}
+
 	return &command{config.Config{"", *cflag, *tflag, *uflag, nil, conf.ChannelTs}, f}
 }
 

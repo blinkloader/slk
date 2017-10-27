@@ -52,3 +52,34 @@ charloop:
 	}
 	return buf.String()
 }
+
+// FormatLines tries to make each message line to have around 100 characters
+func FormatLines(messages []*api.Message) {
+	for i, m := range messages {
+		messages[i].Text = formatLines(m.Text)
+	}
+}
+
+func formatLines(message string) string {
+	buf := new(bytes.Buffer)
+	l := len(message)
+	lineEl := 0
+	addN := false
+	for i := 0; i < l; i++ {
+		if message[i] == ' ' && addN {
+			buf.WriteString("\n")
+			lineEl = 0
+			addN = false
+			continue
+		}
+		if message[i] == '\n' {
+			lineEl = 0
+		}
+		if lineEl == 120 {
+			addN = true
+		}
+		buf.WriteByte(message[i])
+		lineEl++
+	}
+	return buf.String()
+}
