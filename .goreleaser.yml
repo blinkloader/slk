@@ -1,0 +1,23 @@
+builds:
+  -
+    main: cmd/slk/slk.go
+    binary: slk 
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - 386
+    ldflags: -s -w
+  -
+    main: cmd/slkd/slkd.go
+    binary: slkd 
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - 386
+    ldflags: -s -w
+archive:
+  wrap_in_directory: true
