@@ -31,12 +31,17 @@ func (c *command) Run() {
 		log.Fatalf("error getting chat history: %s", err)
 	}
 
+	hist = message.ReverseOrder(hist)
 	message.RemoveURefs(hist)
 	message.FormatLines(hist)
 
 	print.Chat(c.conf.Username, c.conf.Users, hist)
 
-	c.conf.ChannelTs[c.conf.Channel] = hist[0].Ts
+	if len(hist) == 0 {
+		return
+	}
+
+	c.conf.ChannelTs[c.conf.Channel] = hist[len(hist)-1].Ts
 	if err := config.Write(c.conf); err != nil {
 		log.Fatal(err)
 	}

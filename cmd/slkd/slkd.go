@@ -32,22 +32,27 @@ func main() {
 
 		hist, err := api.GetChannelHistory(conf)
 		if err != nil {
-			fmt.Printf("\nslkd: %s", err)
+			log.Fatalf("\nslkd: %s", err)
 		}
 
 		diff := message.TsFilterNewer(conf.ChannelTs[conf.Channel], hist)
 
+		diff = message.ReverseOrder(diff)
 		message.RemoveURefs(diff)
 		message.FormatLines(hist)
 
 		print.ListenChat(conf.Username, conf.Users, diff)
+
+		if len(hist) == 0 {
+			continue
+		}
 
 		conf.ChannelTs[conf.Channel] = hist[0].Ts
 		if err := config.Write(conf); err != nil {
 			fmt.Printf("\nslkd: %s", err)
 		}
 
-		time.Sleep(7 * time.Second)
+		time.Sleep(3 * time.Second)
 	}
 
 }

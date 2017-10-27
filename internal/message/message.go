@@ -83,3 +83,12 @@ func formatLines(message string) string {
 	}
 	return buf.String()
 }
+
+// ReverseOrder does what you expect
+func ReverseOrder(messages []*api.Message) []*api.Message {
+	r := make([]*api.Message, len(messages))
+	for i := range messages {
+		r[i] = messages[len(messages)-1-i]
+	}
+	return r
+}

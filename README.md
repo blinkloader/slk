@@ -1,10 +1,9 @@
-<p align="left">
-  <img style="float: right;" src="https://user-images.githubusercontent.com/12980380/32083822-3122bcc8-bace-11e7-91cb-6a853e128ff9.png" alt="slk logo"/>
+<p align="center">
+  <img style="float: right;" src="https://user-images.githubusercontent.com/12980380/32108527-ab00b5b0-bb3a-11e7-8209-d40fc5109e7e.png"  alt="slk logo"/>
 </p>
 
-
-# SLK - minimalistic slack cli
 [![Go Report Card](https://goreportcard.com/badge/github.com/yarikbratashchuk/slk)](https://goreportcard.com/report/yarikbratashchuk/slk)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/yarikbratashchuk/slk/blob/master/LICENSE)
 
 If you like minimalism, like text interfaces and type fast - then you should try SLK. Its a tiny tool for writing and reading slack messages. 
 
@@ -18,7 +17,7 @@ If you like minimalism, like text interfaces and type fast - then you should try
 ## Demo
 
 <p align="center">
-  <img style="float: right;" src="https://user-images.githubusercontent.com/12980380/32087152-a538ec7c-bae2-11e7-8eef-9158d5c5228a.gif" alt="slk demo"/>
+  <img style="float: right;" src="https://user-images.githubusercontent.com/12980380/32109470-7cde2df4-bb3d-11e7-86ae-172a7d106325.gif" alt="slk demo"/>
 </p>
 
 ## Quick start
@@ -55,3 +54,4 @@ $ slk on           #name of the current channel
 ## Proposals / Contributions
 
 Would you like to improve the tool, or have any ideas how to make it better? Feel free to open an [issue](https://github.com/yarikbratashchuk/slk/issues).
+
