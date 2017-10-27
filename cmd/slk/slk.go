@@ -1,3 +1,4 @@
+// The slk command provides inteface to slack api.
 package main
 
 import (
@@ -56,7 +57,7 @@ Commands:
   read   - get last 10 messages
   write  - write message
 
-  to     - used to switch between channels
+  to     - switch between channels
   
 Options:
   command specific, use "slk help <command>" for details

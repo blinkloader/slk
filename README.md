@@ -37,7 +37,7 @@ $ slk ignore   #stop listening for new messages
 Read/Write message:
 
 ```
-$ slk read     #returns last 10 messages
+$ slk read     #returns 10 last messages
 $ slk write 'hi bot!'         
 ```
 

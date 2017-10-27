@@ -1,3 +1,4 @@
+// Package api holds interface to slack api.
 package api
 
 import (
@@ -29,6 +30,7 @@ type Message struct {
 	Ts   string `json:"ts"`
 }
 
+// GetChannelHistory returns 10 last messages in the channel
 func GetChannelHistory(conf config.Config) ([]*Message, error) {
 	data := url.Values{}
 	data.Set("token", conf.Token)
@@ -53,6 +55,7 @@ func GetChannelHistory(conf config.Config) ([]*Message, error) {
 	return h.Messages, nil
 }
 
+// SendMessage sends message to channel
 func SendMessage(c config.Config, message string) error {
 	data := url.Values{}
 	data.Set("token", c.Token)

@@ -1,3 +1,4 @@
+// listen command starts background channel listening process (slkd)
 package listen
 
 import (
@@ -50,7 +51,12 @@ func (c command) Usage() {
 }
 
 func usage() {
-	fmt.Printf("Usage: %s listen\n", os.Args[0])
+	fmt.Printf(`Usage: %s listen
+
+Starts "slkd" background process. That process does
+simple job - checks if there is any new messages
+that you didn't see.
+`, os.Args[0])
 	os.Exit(0)
 }
 

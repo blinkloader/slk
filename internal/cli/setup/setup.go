@@ -1,3 +1,5 @@
+// setup command sets slk configuration
+// it must be run before any other commands
 package setup
 
 import (
@@ -8,7 +10,6 @@ import (
 	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/cli"
 	"github.com/yarikbratashchuk/slk/internal/config"
-	"github.com/yarikbratashchuk/slk/internal/history"
 	"github.com/yarikbratashchuk/slk/internal/log"
 )
 
@@ -37,7 +38,7 @@ func parseCommand() cli.Command {
 		usage()
 	}
 
-	return &command{config.Config{"", *cflag, *tflag, *uflag, nil}, f}
+	return &command{config.Config{"", *cflag, *tflag, *uflag, nil, conf.ChannelTs}, f}
 }
 
 func (c *command) Run() {
@@ -57,8 +58,6 @@ func (c *command) Run() {
 	if err := config.Write(c.conf); err != nil {
 		log.Fatalf("error saving config: %s", err)
 	}
-
-	history.Clear()
 }
 
 func (c *command) Usage() {
@@ -67,6 +66,10 @@ func (c *command) Usage() {
 
 func usage() {
 	fmt.Printf(`Usage: %s setup <options>
+
+Set up configuration. You need to run this command before you can use "slk".
+Options -t, -c, -u are required if you run "slk setup" for the first time.
+Next time you run "slk setup" all flags are optional (it takes default values from $HOME/.slk)
 
 Options:
   -t  -  slack API token

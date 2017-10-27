@@ -1,3 +1,4 @@
+// Package config holds all stuff related to slk configuration ($HOME/.slk)
 package config
 
 import (
@@ -17,27 +18,31 @@ var (
 	errWriteConfig = errors.New("writing $HOME/.slk")
 )
 
+// Config holds slk configuration
 type Config struct {
 	Channel     string `toml:"channel"`
 	ChannelName string `toml:"channel-name"`
 	Token       string `toml:"token"`
 	Username    string `toml:"username"`
 
-	Users map[string]User `toml:"users"`
+	Users map[string]string `toml:"users"`
+
+	ChannelTs map[string]string `toml:"channel-ts"`
 }
 
-type User struct {
-	Name string `toml:"name"`
-}
-
+// Read reads config from file ($HOME/.slk)
 func Read() (Config, error) {
 	var conf Config
 	if _, err := toml.DecodeFile(configFile, &conf); err != nil {
 		return Config{}, errors.Wrap(errReadConfig, err)
 	}
+	if conf.ChannelTs == nil {
+		conf.ChannelTs = make(map[string]string)
+	}
 	return conf, nil
 }
 
+// Write writes config to file ($HOME/.slk)
 func Write(conf Config) error {
 	buf := new(bytes.Buffer)
 	if err := toml.NewEncoder(buf).Encode(conf); err != nil {
@@ -48,21 +53,4 @@ func Write(conf Config) error {
 		return errors.Wrap(errWriteConfig, err)
 	}
 	return nil
-}
-
-func UpdateProvided(old, new Config) (conf Config, err error) {
-	conf = old
-	if new.Channel != "" {
-		conf.Channel = new.Channel
-	}
-	if new.ChannelName != "" {
-		conf.ChannelName = new.ChannelName
-	}
-	if new.Token != "" {
-		conf.Token = new.Token
-	}
-	if new.Username != "" {
-		conf.Username = new.Username
-	}
-	return conf, nil
 }

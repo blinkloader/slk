@@ -23,6 +23,7 @@ type Channel struct {
 	User string `json:"user"`
 }
 
+// GetChannelID returns channel id by given name
 func GetChannelID(token, name string) (id string, err error) {
 	switch name[0] {
 	case '@': // direct messages
@@ -36,6 +37,7 @@ func GetChannelID(token, name string) (id string, err error) {
 	return
 }
 
+// GetImChatID returns IM chat id by given user name
 func GetImChatID(token, name string) (string, error) {
 	l, err := getChannelList(token, "https://slack.com/api/im.list")
 	if err != nil {
@@ -55,6 +57,7 @@ func GetImChatID(token, name string) (string, error) {
 	return id, nil
 }
 
+// GetGroupID returns public channel or private group id by given name
 func GetGroupID(token, name string) (string, error) {
 	id, err := GetPubChannelID(token, name)
 	if err == nil && id != "" {
@@ -63,6 +66,7 @@ func GetGroupID(token, name string) (string, error) {
 	return GetPrivGroupID(token, name)
 }
 
+// GetPubChannelID returns public channel id by given name
 func GetPubChannelID(token, name string) (string, error) {
 	l, err := getChannelList(token, "https://slack.com/api/channels.list")
 	if err != nil {
@@ -77,6 +81,7 @@ func GetPubChannelID(token, name string) (string, error) {
 	return id, nil
 }
 
+// GetPrivGroupID returns private group id by given name
 func GetPrivGroupID(token, name string) (string, error) {
 	l, err := getChannelList(token, "https://slack.com/api/groups.list")
 	if err != nil {

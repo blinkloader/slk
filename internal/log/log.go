@@ -1,3 +1,4 @@
+// Package log holds error printing primitives
 package log
 
 import (

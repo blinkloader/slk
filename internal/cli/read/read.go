@@ -1,3 +1,4 @@
+// read command returns 10 last messages from channel
 package read
 
 import (
@@ -33,10 +34,19 @@ func (c *command) Run() {
 	message.RemoveURefs(hist)
 
 	print.Chat(c.conf.Username, c.conf.Users, hist)
+
+	c.conf.ChannelTs[c.conf.Channel] = hist[0].Ts
+	if err := config.Write(c.conf); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (c *command) Usage() {
-	fmt.Printf("Usage: %s read\n", os.Args[0])
+	fmt.Printf(`Usage: %s read
+
+Gets 10 last messages from channel (you are currently on).
+Configuration is stored at $HOME/.slk.
+`, os.Args[0])
 	os.Exit(0)
 }
 

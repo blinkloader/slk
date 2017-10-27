@@ -16,7 +16,9 @@ type userList struct {
 	} `json:"members"`
 }
 
-func GetChanUsers(conf config.Config) (users map[string]config.User, err error) {
+// GetChanUsers returns all users that are members of the channel
+// if form map[userID]username
+func GetChanUsers(conf config.Config) (users map[string]string, err error) {
 	data := url.Values{}
 	data.Set("token", conf.Token)
 	data.Set("channel", conf.Channel)
@@ -39,11 +41,11 @@ func GetChanUsers(conf config.Config) (users map[string]config.User, err error) 
 		return
 	}
 
-	users = make(map[string]config.User)
+	users = make(map[string]string)
 	for _, m := range resParsed.Members {
 		for _, u := range userlist.Members {
 			if u.ID == m {
-				users[m] = config.User{u.Name}
+				users[m] = u.Name
 			}
 		}
 	}
@@ -53,6 +55,7 @@ func GetChanUsers(conf config.Config) (users map[string]config.User, err error) 
 
 var errNoSuchUser = errors.New("can't find user with such name")
 
+// GetUserID returns user id by given user name
 func GetUserID(token, name string) (string, error) {
 	ulist, err := getUserList(token)
 	if err != nil {

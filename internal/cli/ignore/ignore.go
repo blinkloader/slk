@@ -1,3 +1,4 @@
+// Ignore command kills background process (slkd)
 package ignore
 
 import (
@@ -31,7 +32,12 @@ func (c command) Usage() {
 }
 
 func usage() {
-	fmt.Printf("Usage: %s ignore\n", os.Args[0])
+	fmt.Printf(`Usage: %s ignore
+
+Kills "slkd" background process. That process does
+simple job - checks if there is any new messages
+that you didn't see.
+`, os.Args[0])
 	os.Exit(0)
 }
 

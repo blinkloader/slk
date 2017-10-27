@@ -1,3 +1,4 @@
+// write command writes message to channel
 package write
 
 import (
@@ -40,7 +41,11 @@ func (c *command) Usage() {
 }
 
 func usage() {
-	fmt.Printf("Usage: %s write <message>", os.Args[0])
+	fmt.Printf(`Usage: %s write <message>
+
+Writes message to the channel (you are currently on).
+Configuration is stored at $HOME/.slk.
+`, os.Args[0])
 	os.Exit(0)
 }
 

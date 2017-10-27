@@ -1,3 +1,5 @@
+// slkd is daemon process. It gets channel history and shows
+// unseen messages. That simple.
 package main
 
 import (
@@ -9,18 +11,12 @@ import (
 
 	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/config"
-	"github.com/yarikbratashchuk/slk/internal/history"
+	"github.com/yarikbratashchuk/slk/internal/log"
 	"github.com/yarikbratashchuk/slk/internal/message"
 	"github.com/yarikbratashchuk/slk/internal/print"
 )
 
 func main() {
-	conf, err := config.Read()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
 	go func() {
@@ -29,36 +25,27 @@ func main() {
 	}()
 
 	for {
-		newConf, err := config.Read()
+		conf, err := config.Read()
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		if newConf.Channel != conf.Channel {
-			_ = history.Clear()
-			conf = newConf
+			log.Fatal(err)
 		}
 
-		fetched, err := api.GetChannelHistory(conf)
+		hist, err := api.GetChannelHistory(conf)
 		if err != nil {
 			fmt.Printf("\nslkd: %s", err)
 		}
 
-		var diff []*api.Message
-		loaded, err := history.Read()
-		if err == nil {
-			diff = history.Diff(loaded, fetched)
-		}
-
-		if err = history.Update(loaded, diff); err != nil {
-			fmt.Printf("\nslkd: %s", err)
-		}
-
+		diff := message.TsFilterNewer(conf.ChannelTs[conf.Channel], hist)
 		message.RemoveURefs(diff)
 
 		print.ListenChat(conf.Username, conf.Users, diff)
 
-		time.Sleep(10 * time.Second)
+		conf.ChannelTs[conf.Channel] = hist[0].Ts
+		if err := config.Write(conf); err != nil {
+			fmt.Printf("\nslkd: %s", err)
+		}
+
+		time.Sleep(7 * time.Second)
 	}
 
 }

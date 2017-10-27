@@ -1,11 +1,33 @@
+// Package message holds logic related to []*api.Message data structure
 package message
 
 import (
 	"bytes"
+	"strconv"
+	"strings"
 
 	"github.com/yarikbratashchuk/slk/internal/api"
 )
 
+// TsFilterNewer returns messages that you didn't read yet
+// its work based on comparing message timestamps.
+func TsFilterNewer(ts string, messages []*api.Message) (filtered []*api.Message) {
+	if ts == "" {
+		return []*api.Message{}
+	}
+
+	t, _ := strconv.ParseInt(ts[:strings.Index(ts, ".")], 10, 64)
+	for _, m := range messages {
+		mt, _ := strconv.ParseInt(m.Ts[:strings.Index(m.Ts, ".")], 10, 64)
+		if mt > t {
+			filtered = append(filtered, m)
+		}
+	}
+	return filtered
+}
+
+// RemoveURefs removes <@USERID> references from every message text,
+// which are useless for terminal environment
 func RemoveURefs(messages []*api.Message) {
 	for i, m := range messages {
 		messages[i].Text = removeUserRef(m.Text)
