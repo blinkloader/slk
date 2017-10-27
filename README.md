@@ -2,6 +2,7 @@
   <img style="float: right;" src="https://user-images.githubusercontent.com/12980380/32108527-ab00b5b0-bb3a-11e7-8209-d40fc5109e7e.png"  alt="slk logo"/>
 </p>
 
+[![CircleCI](https://circleci.com/gh/yarikbratashchuk/slk/tree/master.svg?style=svg)](https://circleci.com/gh/yarikbratashchuk/slk/tree/master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/yarikbratashchuk/slk)](https://goreportcard.com/report/yarikbratashchuk/slk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/yarikbratashchuk/slk/blob/master/LICENSE)
 
@@ -26,7 +27,7 @@ Install slk:
 ```
 $  curl -sfL https://raw.githubusercontent.com/yarikbratashchuk/slk/master/install.sh | sudo sh
 ```
-or (if you're going to contribute)
+or
 ```
 $ go get -u github.com/yarikbratashchuk/slk/...
 ```
