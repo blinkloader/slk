@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/yarikbratashchuk/slk)](https://goreportcard.com/report/yarikbratashchuk/slk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/yarikbratashchuk/slk/blob/master/LICENSE)
 
-If you like minimalism, like text interfaces and type fast - then you should try SLK. Its a tiny tool for writing and reading slack messages. 
+If you like minimalism, like text interfaces and type fast - then you should try *slk*. Its a tiny tool for writing and reading slack messages. 
 
 ## Benefits
 
