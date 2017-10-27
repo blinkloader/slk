@@ -1,0 +1,33 @@
+version: 2
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test 
+          filters:
+            branches:
+              only: master 
+
+jobs:
+  test:
+    docker:
+      - image: circleci/golang:1.9
+    working_directory: /go/src/github.com/yarikbratashchuk/slk
+    steps:
+      - checkout
+      - run:
+          name: run tests
+          command: go test -v --race ./... 
+  deploy:
+    docker:
+      - image: circleci/golang:1.9
+    working_directory: /go/src/github.com/yarikbratashchuk/slk
+    environment:
+    steps:
+      - checkout
+      - run:
+          name: release
+          command: curl -sL https://git.io/goreleaser | bash
