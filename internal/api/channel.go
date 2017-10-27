@@ -9,19 +9,21 @@ import (
 	"github.com/yarikbratashchuk/slk/internal/errors"
 )
 
-type chanList struct {
-	Ok bool `json:"ok"`
+type (
+	chanList struct {
+		Ok bool `json:"ok"`
 
-	Channels []*Channel `json:"channels"`
-	Groups   []*Channel `json:"groups"`
-	Ims      []*Channel `json:"ims"`
-}
+		Channels []*Channel `json:"channels"`
+		Groups   []*Channel `json:"groups"`
+		Ims      []*Channel `json:"ims"`
+	}
 
-type Channel struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	User string `json:"user"`
-}
+	Channel struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+		User string `json:"user"`
+	}
+)
 
 // GetChannelID returns channel id by given name
 func GetChannelID(token, name string) (id string, err error) {

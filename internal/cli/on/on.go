@@ -1,4 +1,4 @@
-// on command prints name of the current channel
+// Package on is a command that prints name of the current channel
 package on
 
 import (

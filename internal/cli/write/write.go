@@ -1,4 +1,4 @@
-// write command writes message to channel
+// Package write is a command that writes message to channel
 package write
 
 import (

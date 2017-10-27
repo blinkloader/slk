@@ -1,4 +1,4 @@
-// read command returns 10 last messages from channel
+// Package read is a command that returns 10 last messages from channel
 package read
 
 import (

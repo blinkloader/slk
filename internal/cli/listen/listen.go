@@ -1,4 +1,4 @@
-// listen command starts background channel listening process (slkd)
+// Package listen is a command that starts background channel listening process (slkd)
 package listen
 
 import (

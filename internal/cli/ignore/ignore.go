@@ -1,4 +1,4 @@
-// Ignore command kills background process (slkd)
+// Package ignore is a command that kills background process (slkd)
 package ignore
 
 import (

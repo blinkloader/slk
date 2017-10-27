@@ -1,4 +1,4 @@
-// setup command sets slk configuration
+// Package setup is a command that sets slk configuration
 // it must be run before any other commands
 package setup
 
