@@ -23,7 +23,10 @@ If you like minimalism, like text interfaces and type fast - then you should try
 ## Quick start
 
 Install slk:
-
+```
+$  curl -sfL https://raw.githubusercontent.com/yarikbratashchuk/slk/master/install.sh | sudo sh
+```
+or 
 ```
 $ go get -u github.com/yarikbratashchuk/slk/...
 ```
