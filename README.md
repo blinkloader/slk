@@ -26,7 +26,7 @@ Install slk:
 ```
 $  curl -sfL https://raw.githubusercontent.com/yarikbratashchuk/slk/master/install.sh | sudo sh
 ```
-or (if you're going to contribute)
+or
 ```
 $ go get -u github.com/yarikbratashchuk/slk/...
 ```
