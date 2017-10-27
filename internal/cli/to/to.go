@@ -36,7 +36,7 @@ func usage() {
 	fmt.Printf(`Usage: %s to <channel>
 
 Used to switch between channels. Equivalent to "slk setup -c <channel>".
-Use "slk chan" to see what channel you are currently on.
+Use "slk on" to see what channel you are currently on.
 `, os.Args[0])
 	os.Exit(0)
 }

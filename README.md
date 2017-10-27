@@ -27,23 +27,16 @@ $ slk setup -t=<slack-token> -c=<channel> -u=<username>
 - `<channel>` - channel name in form: _channel_ for public and private channels, _@user_ for direct messages.
 - `<username>` - your name (`yarik` in demo)
 
-Wait for messages:
+Commands:
 
 ```
-$ slk listen   #start listening for new messages
-$ slk ignore   #stop listening for new messages
-```
+$ slk listen       #start listening for new messages
+$ slk ignore       #stop listening for new messages
 
-Read/Write message:
+$ slk read         #read 10 last messages
+$ slk write 'hey!' #write message to channel
 
-```
-$ slk read     #returns 10 last messages
-$ slk write 'hi bot!'         
-```
-
-Switch to channel or private chat
-
-```
-$ slk to general   #for public channel or private group
-$ slk to @max      #for direct messages
+$ slk to channel   #switch to public channel or private group
+$ slk to @user     #switch to direct messages
+$ slk on           #name of the current channel
 ```

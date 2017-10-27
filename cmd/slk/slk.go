@@ -15,6 +15,7 @@ import (
 	_ "github.com/yarikbratashchuk/slk/internal/cli/read"
 	_ "github.com/yarikbratashchuk/slk/internal/cli/write"
 
+	_ "github.com/yarikbratashchuk/slk/internal/cli/on"
 	_ "github.com/yarikbratashchuk/slk/internal/cli/to"
 )
 
@@ -58,6 +59,7 @@ Commands:
   write  - write message
 
   to     - switch between channels
+  on     - name of the current channel 
   
 Options:
   command specific, use "slk help <command>" for details
