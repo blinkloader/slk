@@ -36,6 +36,12 @@ type client struct {
 }
 
 // New returns new api client
-func New(conf *config.Config) Client {
+func New(conf *config.Config) client {
 	return client{conf, 10}
+}
+
+// MsgLimit sets messages limit
+func (c client) MsgLimit(l int) client {
+	c.msglimit = l
+	return c
 }
