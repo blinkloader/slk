@@ -7,12 +7,11 @@ import (
 
 	"github.com/BurntSushi/toml"
 	env "github.com/segmentio/go-env"
-	"github.com/yarikbratashchuk/slk/internal/errors"
+	"github.com/yarikbratashchuk/slk/errors"
 )
 
 var (
-	configFile    = env.MustGet("HOME") + "/.slk"
-	daemonPIDFile = env.MustGet("HOME") + "/.slkd"
+	configFile = env.MustGet("HOME") + "/.slk"
 
 	errReadConfig  = errors.New("reading $HOME/.slk")
 	errWriteConfig = errors.New("writing $HOME/.slk")
@@ -31,21 +30,20 @@ type Config struct {
 }
 
 // Read reads config from file ($HOME/.slk)
-func Read() (Config, error) {
-	var conf Config
-	if _, err := toml.DecodeFile(configFile, &conf); err != nil {
-		return Config{}, errors.Wrap(errReadConfig, err)
+func (c *Config) Read() error {
+	if _, err := toml.DecodeFile(configFile, c); err != nil {
+		return errors.Wrap(errReadConfig, err)
 	}
-	if conf.ChannelTs == nil {
-		conf.ChannelTs = make(map[string]string)
+	if c.ChannelTs == nil {
+		c.ChannelTs = make(map[string]string)
 	}
-	return conf, nil
+	return nil
 }
 
 // Write writes config to file ($HOME/.slk)
-func Write(conf Config) error {
+func (c *Config) Write() error {
 	buf := new(bytes.Buffer)
-	if err := toml.NewEncoder(buf).Encode(conf); err != nil {
+	if err := toml.NewEncoder(buf).Encode(c); err != nil {
 		return err
 	}
 
@@ -53,4 +51,14 @@ func Write(conf Config) error {
 		return errors.Wrap(errWriteConfig, err)
 	}
 	return nil
+}
+
+var conf = &Config{}
+
+// Read reads config from file ($HOME/.slk)
+func Read() (*Config, error) {
+	if err := conf.Read(); err != nil {
+		return &Config{}, err
+	}
+	return conf, nil
 }

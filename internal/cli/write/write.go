@@ -8,11 +8,12 @@ import (
 	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/cli"
 	"github.com/yarikbratashchuk/slk/internal/config"
-	"github.com/yarikbratashchuk/slk/internal/log"
+	"github.com/yarikbratashchuk/slk/log"
 )
 
 type command struct {
-	conf config.Config
+	conf *config.Config
+	api  api.Client
 
 	message string
 }
@@ -27,11 +28,11 @@ func initCommand() cli.Command {
 		log.Fatal(err)
 	}
 
-	return &command{conf, os.Args[2]}
+	return &command{conf, api.New(conf), os.Args[2]}
 }
 
 func (c *command) Run() {
-	if err := api.SendMessage(c.conf, c.message); err != nil {
+	if err := c.api.SendMessage(c.message); err != nil {
 		log.Fatalf("error sending message: %s", err)
 	}
 }

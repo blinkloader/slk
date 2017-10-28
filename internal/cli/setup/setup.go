@@ -10,11 +10,12 @@ import (
 	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/cli"
 	"github.com/yarikbratashchuk/slk/internal/config"
-	"github.com/yarikbratashchuk/slk/internal/log"
+	"github.com/yarikbratashchuk/slk/log"
 )
 
 type command struct {
-	conf config.Config
+	conf *config.Config
+	api  api.Client
 
 	flag *flag.FlagSet
 }
@@ -29,7 +30,7 @@ func parseCommand() cli.Command {
 	f := flag.NewFlagSet("setup", flag.ExitOnError)
 
 	tflag := f.String("t", conf.Token, "slack API token")
-	cflag := f.String("c", conf.Channel, "channel, private group, or IM channel to send message to")
+	cflag := f.String("c", conf.ChannelName, "channel, private group, or IM channel to send message to")
 	uflag := f.String("u", conf.Username, "your username")
 
 	f.Parse(os.Args[2:])
@@ -42,24 +43,29 @@ func parseCommand() cli.Command {
 		usage()
 	}
 
-	return &command{config.Config{"", *cflag, *tflag, *uflag, nil, conf.ChannelTs}, f}
+	conf.Token = *tflag
+	conf.ChannelName = *cflag
+	conf.Username = *uflag
+
+	return &command{conf, api.New(conf), f}
 }
 
 func (c *command) Run() {
-	channelID, err := api.GetChannelID(c.conf.Token, c.conf.ChannelName)
+	channelID, err := c.api.ChannelID(c.conf.ChannelName)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	c.conf.Channel = channelID
 
-	users, err := api.GetChanUsers(c.conf)
+	users, err := c.api.ChanUsers()
 	if err != nil {
 		log.Fatalf("error getting channel users: %s", err)
 	}
+
 	c.conf.Users = users
 
-	if err := config.Write(c.conf); err != nil {
+	if err := c.conf.Write(); err != nil {
 		log.Fatalf("error saving config: %s", err)
 	}
 }

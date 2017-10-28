@@ -11,18 +11,13 @@ import (
 
 	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/config"
-	"github.com/yarikbratashchuk/slk/internal/log"
 	"github.com/yarikbratashchuk/slk/internal/message"
-	"github.com/yarikbratashchuk/slk/internal/print"
+	"github.com/yarikbratashchuk/slk/internal/out"
+	"github.com/yarikbratashchuk/slk/log"
 )
 
 func main() {
-	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
-	go func() {
-		<-sigs
-		os.Exit(0)
-	}()
+	trap()
 
 	for {
 		conf, err := config.Read()
@@ -30,28 +25,40 @@ func main() {
 			log.Fatal(err)
 		}
 
-		hist, err := api.GetChannelHistory(conf)
+		apictl := api.New(conf)
+
+		hist, err := apictl.ChannelHistory()
 		if err != nil {
 			log.Fatalf("\nslkd: %s", err)
 		}
 
 		diff := message.TsFilterNewer(conf.ChannelTs[conf.Channel], hist)
-
 		diff = message.ReverseOrder(diff)
+
 		message.RemoveURefs(diff)
 		message.FormatLines(hist)
 
-		print.ListenChat(conf.Username, conf.Users, diff)
+		out.PrintChatBg(conf.Username, conf.Users, diff)
 
 		if len(hist) == 0 {
 			continue
 		}
 
 		conf.ChannelTs[conf.Channel] = hist[0].Ts
-		if err := config.Write(conf); err != nil {
+
+		if err := conf.Write(); err != nil {
 			fmt.Printf("\nslkd: %s", err)
 		}
 
 		time.Sleep(3 * time.Second)
 	}
+}
+
+func trap() {
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
+	go func() {
+		<-sigs
+		os.Exit(0)
+	}()
 }

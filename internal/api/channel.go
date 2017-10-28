@@ -6,32 +6,30 @@ import (
 	"net/url"
 	"reflect"
 
-	"github.com/yarikbratashchuk/slk/internal/errors"
+	"github.com/yarikbratashchuk/slk/errors"
 )
 
-type (
-	chanList struct {
-		Ok bool `json:"ok"`
+type chanList struct {
+	Ok bool `json:"ok"`
 
-		Channels []*Channel `json:"channels"`
-		Groups   []*Channel `json:"groups"`
-		Ims      []*Channel `json:"ims"`
-	}
+	Channels []*Channel `json:"channels"`
+	Groups   []*Channel `json:"groups"`
+	Ims      []*Channel `json:"ims"`
+}
 
-	Channel struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-		User string `json:"user"`
-	}
-)
+type Channel struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	User string `json:"user"`
+}
 
-// GetChannelID returns channel id by given name
-func GetChannelID(token, name string) (id string, err error) {
+// ChannelID returns channel id by given name
+func (c client) ChannelID(name string) (id string, err error) {
 	switch name[0] {
 	case '@': // direct messages
-		id, err = GetImChatID(token, name[1:])
+		id, err = c.ImChatID(name[1:])
 	default: // public channels and private groups
-		id, err = GetGroupID(token, name)
+		id, err = c.GroupID(name)
 	}
 	if err != nil {
 		return "", errors.Wrap(errGetChannelID, err)
@@ -39,14 +37,14 @@ func GetChannelID(token, name string) (id string, err error) {
 	return
 }
 
-// GetImChatID returns IM chat id by given user name
-func GetImChatID(token, name string) (string, error) {
-	l, err := getChannelList(token, "https://slack.com/api/im.list")
+// ImChatID returns IM chat id by given user name
+func (c client) ImChatID(name string) (string, error) {
+	l, err := getChannelList(c.conf.Token, "https://slack.com/api/im.list")
 	if err != nil {
 		return "", err
 	}
 
-	userID, err := GetUserID(token, name)
+	userID, err := c.UserID(name)
 	if err != nil {
 		return "", err
 	}
@@ -59,17 +57,17 @@ func GetImChatID(token, name string) (string, error) {
 	return id, nil
 }
 
-// GetGroupID returns public channel or private group id by given name
-func GetGroupID(token, name string) (string, error) {
-	id, err := GetPubChannelID(token, name)
+// GroupID returns public channel or private group id by given name
+func (c client) GroupID(name string) (string, error) {
+	id, err := getPubChannelID(c.conf.Token, name)
 	if err == nil && id != "" {
 		return id, nil
 	}
-	return GetPrivGroupID(token, name)
+	return getPrivGroupID(c.conf.Token, name)
 }
 
-// GetPubChannelID returns public channel id by given name
-func GetPubChannelID(token, name string) (string, error) {
+// getPubChannelID returns public channel id by given name
+func getPubChannelID(token, name string) (string, error) {
 	l, err := getChannelList(token, "https://slack.com/api/channels.list")
 	if err != nil {
 		return "", err
@@ -83,8 +81,8 @@ func GetPubChannelID(token, name string) (string, error) {
 	return id, nil
 }
 
-// GetPrivGroupID returns private group id by given name
-func GetPrivGroupID(token, name string) (string, error) {
+// getPrivGroupID returns private group id by given name
+func getPrivGroupID(token, name string) (string, error) {
 	l, err := getChannelList(token, "https://slack.com/api/groups.list")
 	if err != nil {
 		return "", err

@@ -5,23 +5,24 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/yarikbratashchuk/slk/internal/config"
-	"github.com/yarikbratashchuk/slk/internal/errors"
+	"github.com/yarikbratashchuk/slk/errors"
 )
 
-type userList struct {
-	Members []struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-	} `json:"members"`
+type userlist struct {
+	Members []*User `json:"members"`
 }
 
-// GetChanUsers returns all users that are members of the channel
+type User struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+// ChanUsers returns all users that are members of the channel
 // if form map[userID]username
-func GetChanUsers(conf config.Config) (users map[string]string, err error) {
+func (c client) ChanUsers() (users map[string]string, err error) {
 	data := url.Values{}
-	data.Set("token", conf.Token)
-	data.Set("channel", conf.Channel)
+	data.Set("token", c.conf.Token)
+	data.Set("channel", c.conf.Channel)
 
 	res, err := http.PostForm("https://slack.com/api/conversations.members", data)
 	if err != nil {
@@ -36,14 +37,14 @@ func GetChanUsers(conf config.Config) (users map[string]string, err error) {
 	}
 	defer res.Body.Close()
 
-	userlist, err := getUserList(conf.Token)
+	members, err := c.UserList()
 	if err != nil {
 		return
 	}
 
 	users = make(map[string]string)
 	for _, m := range resParsed.Members {
-		for _, u := range userlist.Members {
+		for _, u := range members {
 			if u.ID == m {
 				users[m] = u.Name
 			}
@@ -56,13 +57,13 @@ func GetChanUsers(conf config.Config) (users map[string]string, err error) {
 var errNoSuchUser = errors.New("can't find user with such name")
 
 // GetUserID returns user id by given user name
-func GetUserID(token, name string) (string, error) {
-	ulist, err := getUserList(token)
+func (c client) UserID(name string) (string, error) {
+	members, err := c.UserList()
 	if err != nil {
 		return "", err
 	}
 
-	for _, u := range ulist.Members {
+	for _, u := range members {
 		if u.Name == name {
 			return u.ID, nil
 		}
@@ -70,17 +71,19 @@ func GetUserID(token, name string) (string, error) {
 	return "", errNoSuchUser
 }
 
-func getUserList(token string) (list userList, err error) {
+// UserList returns all users
+func (c client) UserList() ([]*User, error) {
 	data := url.Values{}
-	data.Set("token", token)
+	data.Set("token", c.conf.Token)
 	res, err := http.PostForm("https://slack.com/api/users.list", data)
 	if err != nil {
-		return
+		return []*User{}, err
 	}
 	defer res.Body.Close()
 
+	var list userlist
 	if err = json.NewDecoder(res.Body).Decode(&list); err != nil {
-		return
+		return []*User{}, err
 	}
-	return
+	return list.Members, nil
 }

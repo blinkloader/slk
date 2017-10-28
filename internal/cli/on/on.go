@@ -11,7 +11,7 @@ import (
 )
 
 type command struct {
-	conf config.Config
+	conf *config.Config
 }
 
 func initCommand() cli.Command {

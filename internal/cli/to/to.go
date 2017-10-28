@@ -7,7 +7,7 @@ import (
 	"os/exec"
 
 	"github.com/yarikbratashchuk/slk/internal/cli"
-	"github.com/yarikbratashchuk/slk/internal/log"
+	"github.com/yarikbratashchuk/slk/log"
 )
 
 type command struct{}

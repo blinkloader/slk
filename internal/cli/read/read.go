@@ -8,13 +8,14 @@ import (
 	"github.com/yarikbratashchuk/slk/internal/api"
 	"github.com/yarikbratashchuk/slk/internal/cli"
 	"github.com/yarikbratashchuk/slk/internal/config"
-	"github.com/yarikbratashchuk/slk/internal/log"
 	"github.com/yarikbratashchuk/slk/internal/message"
-	"github.com/yarikbratashchuk/slk/internal/print"
+	"github.com/yarikbratashchuk/slk/internal/out"
+	"github.com/yarikbratashchuk/slk/log"
 )
 
 type command struct {
-	conf config.Config
+	conf *config.Config
+	api  api.Client
 }
 
 func initCommand() cli.Command {
@@ -22,27 +23,29 @@ func initCommand() cli.Command {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return &command{conf}
+	return &command{conf, api.New(conf)}
 }
 
 func (c *command) Run() {
-	hist, err := api.GetChannelHistory(c.conf)
+	hist, err := c.api.ChannelHistory()
 	if err != nil {
 		log.Fatalf("error getting chat history: %s", err)
 	}
 
 	hist = message.ReverseOrder(hist)
+
 	message.RemoveURefs(hist)
 	message.FormatLines(hist)
 
-	print.Chat(c.conf.Username, c.conf.Users, hist)
+	out.PrintChat(c.conf.Username, c.conf.Users, hist)
 
 	if len(hist) == 0 {
 		return
 	}
 
 	c.conf.ChannelTs[c.conf.Channel] = hist[len(hist)-1].Ts
-	if err := config.Write(c.conf); err != nil {
+
+	if err := c.conf.Write(); err != nil {
 		log.Fatal(err)
 	}
 }

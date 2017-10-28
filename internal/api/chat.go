@@ -1,13 +1,12 @@
-// Package api holds interface to slack api.
 package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 
-	"github.com/yarikbratashchuk/slk/internal/config"
-	"github.com/yarikbratashchuk/slk/internal/errors"
+	"github.com/yarikbratashchuk/slk/errors"
 )
 
 var (
@@ -30,12 +29,12 @@ type Message struct {
 	Ts   string `json:"ts"`
 }
 
-// GetChannelHistory returns 10 last messages in the channel
-func GetChannelHistory(conf config.Config) ([]*Message, error) {
+// ChannelHistory returns 10 last messages in the channel
+func (c client) ChannelHistory() ([]*Message, error) {
 	data := url.Values{}
-	data.Set("token", conf.Token)
-	data.Set("channel", conf.Channel)
-	data.Set("limit", "10")
+	data.Set("token", c.conf.Token)
+	data.Set("channel", c.conf.Channel)
+	data.Set("limit", fmt.Sprintf("%d", c.msglimit))
 
 	res, err := http.PostForm("https://slack.com/api/conversations.history", data)
 	if err != nil {
@@ -56,12 +55,12 @@ func GetChannelHistory(conf config.Config) ([]*Message, error) {
 }
 
 // SendMessage sends message to channel
-func SendMessage(c config.Config, message string) error {
+func (c client) SendMessage(message string) error {
 	data := url.Values{}
-	data.Set("token", c.Token)
-	data.Set("channel", c.Channel)
+	data.Set("token", c.conf.Token)
+	data.Set("channel", c.conf.Channel)
 	data.Set("text", message)
-	data.Set("username", c.Username)
+	data.Set("username", c.conf.Username)
 	data.Set("as_user", "1")
 
 	_, err := http.PostForm("https://slack.com/api/chat.postMessage", data)
