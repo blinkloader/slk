@@ -23,7 +23,7 @@ func initCommand() cli.Command {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return &command{conf, api.New(conf).MsgLimit(10)}
+	return &command{conf, api.New(conf).NumMessages(10)}
 }
 
 func (c *command) Run() {

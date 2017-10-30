@@ -4,7 +4,6 @@ package message
 import (
 	"bytes"
 	"strconv"
-	"strings"
 
 	"github.com/yarikbratashchuk/slk/internal/api"
 )
@@ -16,9 +15,9 @@ func TsFilterNewer(ts string, messages []*api.Message) (filtered []*api.Message)
 		return []*api.Message{}
 	}
 
-	t, _ := strconv.ParseInt(ts[:strings.Index(ts, ".")], 10, 64)
+	t, _ := strconv.ParseFloat(ts, 64)
 	for _, m := range messages {
-		mt, _ := strconv.ParseInt(m.Ts[:strings.Index(m.Ts, ".")], 10, 64)
+		mt, _ := strconv.ParseFloat(m.Ts, 64)
 		if mt > t {
 			filtered = append(filtered, m)
 		}

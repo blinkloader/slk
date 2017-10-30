@@ -45,6 +45,7 @@ func (p *Printer) PrintChat(username string, users map[string]string, messages [
 	p.buf.WriteString("\n")
 
 	p.Out.Write(p.buf.Bytes())
+	p.buf.Reset()
 }
 
 var defPrinter = &Printer{

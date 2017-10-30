@@ -26,6 +26,9 @@ type Client interface {
 
 	// SendMessage sends message to channel
 	SendMessage(string) error
+
+	// NumMessages sets number of last messages being returned
+	NumMessages(int) Client
 }
 
 // client implements Client
@@ -36,12 +39,12 @@ type client struct {
 }
 
 // New returns new api client
-func New(conf *config.Config) client {
+func New(conf *config.Config) Client {
 	return client{conf, 10}
 }
 
-// MsgLimit sets messages limit
-func (c client) MsgLimit(l int) client {
+// NumMessages sets messages limit
+func (c client) NumMessages(l int) Client {
 	c.msglimit = l
 	return c
 }
