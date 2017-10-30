@@ -3,7 +3,7 @@ package message
 import (
 	"testing"
 
-	"github.com/yarikbratashchuk/slk/internal/api"
+	"github.com/blinkloader/slk/internal/api"
 )
 
 func TestReverseOrder(t *testing.T) {

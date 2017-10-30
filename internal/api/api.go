@@ -1,7 +1,7 @@
 // Package api holds interface to slack api.
 package api
 
-import "github.com/yarikbratashchuk/slk/internal/config"
+import "github.com/blinkloader/slk/internal/config"
 
 // Client is an api interface
 type Client interface {

@@ -5,18 +5,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/yarikbratashchuk/slk/internal/cli"
+	"github.com/blinkloader/slk/internal/cli"
 
-	_ "github.com/yarikbratashchuk/slk/internal/cli/setup"
+	_ "github.com/blinkloader/slk/internal/cli/setup"
 
-	_ "github.com/yarikbratashchuk/slk/internal/cli/ignore"
-	_ "github.com/yarikbratashchuk/slk/internal/cli/listen"
+	_ "github.com/blinkloader/slk/internal/cli/ignore"
+	_ "github.com/blinkloader/slk/internal/cli/listen"
 
-	_ "github.com/yarikbratashchuk/slk/internal/cli/read"
-	_ "github.com/yarikbratashchuk/slk/internal/cli/write"
+	_ "github.com/blinkloader/slk/internal/cli/read"
+	_ "github.com/blinkloader/slk/internal/cli/write"
 
-	_ "github.com/yarikbratashchuk/slk/internal/cli/on"
-	_ "github.com/yarikbratashchuk/slk/internal/cli/to"
+	_ "github.com/blinkloader/slk/internal/cli/on"
+	_ "github.com/blinkloader/slk/internal/cli/to"
 )
 
 func main() {

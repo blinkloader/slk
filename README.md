@@ -1,4 +1,4 @@
-[![Build Status](https://circleci.com/gh/yarikbratashchuk/slk/tree/master.svg?style=svg)](https://circleci.com/gh/yarikbratashchuk/slk/tree/master)
+[![CircleCI](https://circleci.com/gh/blinkloader/slk.svg?style=svg)](https://circleci.com/gh/blinkloader/slk)
 
 <p align="center">
   <img style="float: right;" src="https://user-images.githubusercontent.com/12980380/32108527-ab00b5b0-bb3a-11e7-8209-d40fc5109e7e.png"  alt="slk logo"/>
@@ -11,7 +11,7 @@ If you like minimalism, like text interfaces and type fast - then you should try
 - minimalistic, enjoyable slack interface 
 - no need to swich apps
 - helps you to save power if you need it
-- for those (like myself) who don't like slack to be opened all the time
+- for those who don't like slack to be opened all the time
 
 ## Demo
 
@@ -23,11 +23,11 @@ If you like minimalism, like text interfaces and type fast - then you should try
 
 Install slk:
 ```
-$  curl -sfL https://raw.githubusercontent.com/yarikbratashchuk/slk/master/install.sh | sudo sh
+$  curl -sfL https://raw.githubusercontent.com/blinkloader/slk/master/install.sh | sudo sh
 ```
 or
 ```
-$ go get -u github.com/yarikbratashchuk/slk/...
+$ go get -u github.com/blinkloader/slk/...
 ```
 
 Setup:
@@ -55,5 +55,8 @@ $ slk on           #name of the current channel
 
 ## Proposals / Contributions
 
-Would you like to improve the tool, or have any ideas how to make it better? Feel free to open an [issue](https://github.com/yarikbratashchuk/slk/issues).
+Would you like to improve the tool, or have any ideas how to make it better? Feel free to open an [issue](https://github.com/blinkloader/slk/issues).
 
+## License
+
+MIT license

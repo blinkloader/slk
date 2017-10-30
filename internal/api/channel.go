@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"reflect"
 
-	"github.com/yarikbratashchuk/slk/errors"
+	"github.com/blinkloader/slk/errors"
 )
 
 type chanList struct {

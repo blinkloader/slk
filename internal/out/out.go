@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/yarikbratashchuk/slk/internal/api"
+	"github.com/blinkloader/slk/internal/api"
 )
 
 type Printer struct {
@@ -39,6 +39,7 @@ func (p *Printer) PrintChat(username string, users map[string]string, messages [
 	}
 	messagesBuf, my := writeMsgs(uw, username, users, messages)
 	if fromDaemon && len(messages) == my {
+		p.buf.Reset()
 		return
 	}
 	p.buf.Write(messagesBuf)

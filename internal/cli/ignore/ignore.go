@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/yarikbratashchuk/slk/internal/cli"
+	"github.com/blinkloader/slk/internal/cli"
 )
 
 type command struct{}

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/yarikbratashchuk/slk/errors"
+	"github.com/blinkloader/slk/errors"
 )
 
 var (

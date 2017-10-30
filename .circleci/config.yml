@@ -15,7 +15,7 @@ jobs:
   test:
     docker:
       - image: circleci/golang:1.9
-    working_directory: /go/src/github.com/yarikbratashchuk/slk
+    working_directory: /go/src/github.com/blinkloader/slk
     steps:
       - checkout
       - run:
@@ -24,10 +24,12 @@ jobs:
   deploy:
     docker:
       - image: circleci/golang:1.9
-    working_directory: /go/src/github.com/yarikbratashchuk/slk
+    working_directory: /go/src/github.com/blinkloader/slk
     environment:
     steps:
       - checkout
       - run:
           name: release
-          command: curl -sL https://git.io/goreleaser | bash
+          command: |
+            if [[ `git describe 2>/dev/null` == "" ]] ; then exit 0; fi
+            curl -sL https://git.io/goreleaser | bash

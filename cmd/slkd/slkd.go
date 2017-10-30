@@ -9,11 +9,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/yarikbratashchuk/slk/internal/api"
-	"github.com/yarikbratashchuk/slk/internal/config"
-	"github.com/yarikbratashchuk/slk/internal/message"
-	"github.com/yarikbratashchuk/slk/internal/out"
-	"github.com/yarikbratashchuk/slk/log"
+	"github.com/blinkloader/slk/internal/api"
+	"github.com/blinkloader/slk/internal/config"
+	"github.com/blinkloader/slk/internal/message"
+	"github.com/blinkloader/slk/internal/out"
+	"github.com/blinkloader/slk/log"
 )
 
 func main() {

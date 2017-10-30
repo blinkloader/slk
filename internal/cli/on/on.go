@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/yarikbratashchuk/slk/internal/cli"
-	"github.com/yarikbratashchuk/slk/internal/config"
+	"github.com/blinkloader/slk/internal/cli"
+	"github.com/blinkloader/slk/internal/config"
 )
 
 type command struct {

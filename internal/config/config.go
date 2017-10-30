@@ -7,7 +7,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	env "github.com/segmentio/go-env"
-	"github.com/yarikbratashchuk/slk/errors"
+	"github.com/blinkloader/slk/errors"
 )
 
 var (

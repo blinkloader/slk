@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/yarikbratashchuk/slk/internal/cli"
-	"github.com/yarikbratashchuk/slk/log"
+	"github.com/blinkloader/slk/internal/cli"
+	"github.com/blinkloader/slk/log"
 )
 
 type command struct{}

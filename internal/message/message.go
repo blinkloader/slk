@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"strconv"
 
-	"github.com/yarikbratashchuk/slk/internal/api"
+	"github.com/blinkloader/slk/internal/api"
 )
 
 // TsFilterNewer returns messages that you didn't read yet

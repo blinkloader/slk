@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/yarikbratashchuk/slk/internal/api"
-	"github.com/yarikbratashchuk/slk/internal/cli"
-	"github.com/yarikbratashchuk/slk/internal/config"
-	"github.com/yarikbratashchuk/slk/log"
+	"github.com/blinkloader/slk/internal/api"
+	"github.com/blinkloader/slk/internal/cli"
+	"github.com/blinkloader/slk/internal/config"
+	"github.com/blinkloader/slk/log"
 )
 
 type command struct {
